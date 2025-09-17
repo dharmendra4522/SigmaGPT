@@ -69,42 +69,55 @@ router.delete("/thread/:threadId", async(req, res) =>{
 });
 
 
-router.post("/chat", async(req, res) =>{
-    const {threadId, messages} = req.body;
+router.post("/chat", async (req, res) => {
+    const { threadId, message } = req.body; // Use 'message' instead of 'messages'
 
-    if(!threadId || !messages){
-        res.status(404).json({error:"missing required fields"});
+    if (!threadId || !message) {
+        return res.status(400).json({ error: "missing required fields" }); // Use 400 for bad request
     }
-    try{
-        let thread = await Thread.findOne({threadId});
-        if(!thread){
-            //create a new thread in DB
+    try {
+        let thread = await Thread.findOne({ threadId });
+        if (!thread) {
+            // Create a new thread in DB
             thread = new Thread({
                 threadId,
-                title: messages,
-                messages: [{role: "user", content: messages}]
+                title: message, // Use the first message as the title
+                messages: [{ role: "user", content: message }]
             });
-            await thread.save();
-            thread = thread;
-        } else{
-            thread.messages.push({role: "user", content: messages});
+        } else {
+            thread.messages.push({ role: "user", content: message });
         }
 
+        const assistantReply = await getOpenAIAPIResponse(message);
 
-        const assistantReply = await getOpenAIAPIResponse(messages);
-
-        thread.messages.push({role: "assistant", content: assistantReply});
+        thread.messages.push({ role: "assistant", content: assistantReply });
 
         await thread.save();
-        res.json({reply: assistantReply});
+        return res.json({ reply: assistantReply });
 
-
-    } catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(500).json({error: "something went worng"});
+        return res.status(500).json({ error: "something went wrong" });
     }
 });
 
 
 
-export default router;
+// // Dummy POST route for testing
+// router.post('/chat', (req, res) => {
+//   const { message, threadId } = req.body;
+//   if (!message || !threadId) {
+//     return res.status(400).json({ error: 'missing required fields' });
+//   }
+
+//   // Example: Save to DB (pseudo code)
+//   // const thread = await Thread.create({
+//     return res.status(400).json({ error: 'missing required fields' });
+//   }/   messages: [{ role: "user", content: message }]
+//   // });
+//   // Example: Save to DB (pseudo code)
+//   // const thread = await Thread.create({
+//   //   threadId,ly: `You said: ${message}`, threadId });
+//   //   messages: [{ role: "user", content: message }]
+//   // });
+export default router;//   // For now, just send a dummy response//   res.json({ reply: `You said: ${message}`, threadId });// });export default router;
