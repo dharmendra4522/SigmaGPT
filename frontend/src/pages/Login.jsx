@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import './AuthForm.css'; // <-- CSS file import karein
 
 const Login = () => {
     const [inputs, setInputs] = useState({ username: '', password: '' });
@@ -22,9 +23,8 @@ const Login = () => {
                 credentials: 'include'
             });
             const data = await res.json();
-            if (data.error) {
-                throw new Error(data.error);
-            }
+            if (data.error) throw new Error(data.error);
+            
             localStorage.setItem("chat-user", JSON.stringify(data));
             setAuthUser(data);
             navigate('/');
@@ -36,27 +36,27 @@ const Login = () => {
     };
 
     return (
-        <div style={styles.container}>
-            <form style={styles.form} onSubmit={handleSubmit}>
-                <h2 style={styles.title}>Login to SigmaGPT</h2>
-                {error && <p style={styles.error}>{error}</p>}
+        <div className="auth-container">
+            <form className="auth-form" onSubmit={handleSubmit}>
+                <h2 className="auth-title">Login to SigmaGPT</h2>
+                {error && <p className="auth-error">{error}</p>}
                 <input
                     type='text'
                     placeholder='Username'
-                    style={styles.input}
+                    className="auth-input"
                     onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
                 />
                 <input
                     type='password'
                     placeholder='Password'
-                    style={styles.input}
+                    className="auth-input"
                     onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                 />
-                <button type='submit' style={styles.button} disabled={loading}>
+                <button type='submit' className="auth-button" disabled={loading}>
                     {loading ? "Logging In..." : "Login"}
                 </button>
-                <p style={styles.linkText}>
-                    Don't have an account? <Link to="/signup" style={styles.link}>Sign Up</Link>
+                <p className="auth-link-text">
+                    Don't have an account? <Link to="/signup" className="auth-link">Sign Up</Link>
                 </p>
             </form>
         </div>
@@ -64,14 +64,3 @@ const Login = () => {
 };
 
 export default Login;
-
-const styles = {
-    container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#212121' },
-    form: { display: 'flex', flexDirection: 'column', gap: '15px', padding: '30px', backgroundColor: '#333', borderRadius: '8px', color: 'white', minWidth: '300px' },
-    title: { textAlign: 'center', marginBottom: '10px' },
-    input: { padding: '10px', borderRadius: '4px', border: '1px solid #555', backgroundColor: '#444', color: 'white' },
-    button: { padding: '10px', borderRadius: '4px', border: 'none', backgroundColor: '#5e5ce5', color: 'white', cursor: 'pointer', fontSize: '16px' },
-    linkText: { textAlign: 'center', marginTop: '10px', fontSize: '14px' },
-    link: { color: '#5e5ce5', textDecoration: 'none' },
-    error: { backgroundColor: 'rgba(255, 0, 0, 0.2)', color: '#ff8a8a', padding: '10px', borderRadius: '4px', textAlign: 'center', border: '1px solid red' }
-};

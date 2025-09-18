@@ -1,0 +1,129 @@
+/* Main container for the whole page */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #1e1e1e; /* Slightly lighter dark background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    perspective: 1000px; /* For 3D effect */
+}
+
+/* The form itself with a subtle 3D tilt effect on hover */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Increased gap */
+    background: linear-gradient(145deg, #2e2e2e, #262626);
+    padding: 40px;
+    border-radius: 15px;
+    color: white;
+    min-width: 350px; /* Increased width */
+    box-shadow: 8px 8px 16px #1a1a1a,
+                -8px -8px 16px #363636,
+                inset 1px 1px 2px rgba(255, 255, 255, 0.1);
+    border: 1px solid #444;
+    transition: transform 0.4s ease-in-out;
+}
+
+.auth-form:hover {
+    transform: rotateY(-5deg) rotateX(3deg); /* 3D tilt on hover */
+}
+
+/* Form title */
+.auth-title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 2.2em; /* Bigger title */
+    font-weight: 300;
+    color: #e0e0e0;
+    text-shadow: 0 0 10px rgba(94, 92, 229, 0.5);
+}
+
+/* Input fields with interactive focus */
+.auth-input {
+    padding: 13px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #252525;
+    color: #f0f0f0;
+    font-size: 1em;
+    box-shadow: inset 3px 3px 6px #1a1a1a,
+                inset -3px -3px 6px #363636;
+    transition: all 0.3s ease;
+    width: 100%; /* <-- Add this line */
+    box-sizing: border-box; /* <-- And this line */
+}
+
+.auth-input::placeholder {
+    color: #888;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: #5e5ce5;
+    box-shadow: 0 0 15px rgba(94, 92, 229, 0.6),
+                inset 3px 3px 6px #1a1a1a,
+                inset -3px -3px 6px #363636;
+}
+
+/* Button with interactive hover */
+.auth-button {
+    padding: 15px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(145deg, #5e5ce5, #4b48b8);
+    color: white;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 4px 4px 8px #1a1a1a,
+                -4px -4px 8px #363636;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 12px #1a1a1a,
+                -6px -6px 12px #363636;
+    filter: brightness(1.1);
+}
+
+.auth-button:disabled {
+    background: #444;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Link text like "Don't have an account?" */
+.auth-link-text {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+.auth-link {
+    color: #8280ff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+    color: #a3a1ff;
+    text-decoration: underline;
+}
+
+/* Error message styling */
+.auth-error {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ff8a8a;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #800;
+}

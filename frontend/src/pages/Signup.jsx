@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import './AuthForm.css'; // <-- CSS file import karein
 
 const Signup = () => {
     const [inputs, setInputs] = useState({ name: '', username: '', email: '', password: '' });
@@ -22,9 +23,8 @@ const Signup = () => {
                 credentials: 'include'
             });
             const data = await res.json();
-            if (data.error) {
-                throw new Error(data.error);
-            }
+            if (data.error) throw new Error(data.error);
+
             localStorage.setItem("chat-user", JSON.stringify(data));
             setAuthUser(data);
             navigate('/');
@@ -36,22 +36,19 @@ const Signup = () => {
     };
 
     return (
-        <div style={styles.container}>
-            <form style={styles.form} onSubmit={handleSubmit}>
-                <h2 style={styles.title}>Sign Up for SigmaGPT</h2>
-                {/* Error message yahan dikhega */}
-                {error && <p style={styles.error}>{error}</p>}
-                
-                <input type='text' placeholder='Full Name' style={styles.input} onChange={(e) => setInputs({ ...inputs, name: e.target.value })}/>
-                <input type='text' placeholder='Username' style={styles.input} onChange={(e) => setInputs({ ...inputs, username: e.target.value })}/>
-                <input type='email' placeholder='Email' style={styles.input} onChange={(e) => setInputs({ ...inputs, email: e.target.value })}/>
-                <input type='password' placeholder='Password' style={styles.input} onChange={(e) => setInputs({ ...inputs, password: e.target.value })}/>
-                
-                <button type='submit' style={styles.button} disabled={loading}>
+        <div className="auth-container">
+            <form className="auth-form" onSubmit={handleSubmit}>
+                <h2 className="auth-title">Sign Up for SigmaGPT</h2>
+                {error && <p className="auth-error">{error}</p>}
+                <input type='text' placeholder='Full Name' className="auth-input" onChange={(e) => setInputs({ ...inputs, name: e.target.value })}/>
+                <input type='text' placeholder='Username' className="auth-input" onChange={(e) => setInputs({ ...inputs, username: e.target.value })}/>
+                <input type='email' placeholder='Email' className="auth-input" onChange={(e) => setInputs({ ...inputs, email: e.target.value })}/>
+                <input type='password' placeholder='Password' className="auth-input" onChange={(e) => setInputs({ ...inputs, password: e.target.value })}/>
+                <button type='submit' className="auth-button" disabled={loading}>
                     {loading ? "Signing Up..." : "Sign Up"}
                 </button>
-                <p style={styles.linkText}>
-                    Already have an account? <Link to="/login" style={styles.link}>Login</Link>
+                <p className="auth-link-text">
+                    Already have an account? <Link to="/login" className="auth-link">Login</Link>
                 </p>
             </form>
         </div>
@@ -59,15 +56,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
-// Inline styles (aap ise CSS file me daal sakte hain)
-const styles = {
-    container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#212121' },
-    form: { display: 'flex', flexDirection: 'column', gap: '15px', padding: '30px', backgroundColor: '#333', borderRadius: '8px', color: 'white', minWidth: '300px' },
-    title: { textAlign: 'center', marginBottom: '10px' },
-    input: { padding: '10px', borderRadius: '4px', border: '1px solid #555', backgroundColor: '#444', color: 'white' },
-    button: { padding: '10px', borderRadius: '4px', border: 'none', backgroundColor: '#5e5ce5', color: 'white', cursor: 'pointer', fontSize: '16px' },
-    linkText: { textAlign: 'center', marginTop: '10px', fontSize: '14px' },
-    link: { color: '#5e5ce5', textDecoration: 'none' },
-    error: { backgroundColor: 'rgba(255, 0, 0, 0.2)', color: '#ff8a8a', padding: '10px', borderRadius: '4px', textAlign: 'center', border: '1px solid red' }
-};
