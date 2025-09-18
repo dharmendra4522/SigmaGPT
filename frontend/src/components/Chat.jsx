@@ -1,6 +1,7 @@
 import "./Chat.css";
 import React, { useContext, useState, useEffect } from "react";
 import { MyContext } from "./MyContext";
+import { useAuthContext } from '../context/AuthContext';
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 // import "highlight.js/styles/github-dark.css";
@@ -9,6 +10,7 @@ import "highlight.js/styles/atom-one-dark.css";
 
 function Chat() {
     const {newChat, prevChats, reply} = useContext(MyContext);
+    const { authUser } = useAuthContext();
     const [latestReply, setLatestReply] = useState(null);
 
     useEffect(() => {
@@ -35,7 +37,8 @@ function Chat() {
 
     return (
         <>
-            {newChat && <h1>Start a New Chat!</h1>}
+            {/* {newChat && <h1>Start a New Chat!</h1>} */}
+            {newChat && <h1>Hello, {authUser?.name}! How can I help you today?</h1>}
             <div className="chats">
                 {
                     prevChats?.slice(0, -1).map((chat, idx) => 

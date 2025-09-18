@@ -9,15 +9,19 @@ const MessageSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
-
     },
-    timestamps: {
+    createdAt: { // Iska naam 'createdAt' aacha hai
         type: Date,
         default: Date.now,
     },
 });
 
 const ThreadSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     threadId: {
         type: String,
         required: true,
@@ -25,13 +29,12 @@ const ThreadSchema = new mongoose.Schema({
     },
     title: {
         type: String,
-        default: "New chat",
+        default: "New Chat",
     },
     messages: [MessageSchema],
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    }
-});
+    
+    // Yahan se manual 'createdAt' field hata diya gaya hai
+
+}, { timestamps: true }); // Yeh option apne aap createdAt aur updatedAt bana dega
 
 export default mongoose.model("Thread", ThreadSchema);
