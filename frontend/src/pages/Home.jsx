@@ -1,3 +1,5 @@
+// src/pages/Home.jsx
+
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { MyContext } from "../components/MyContext.jsx";
@@ -6,16 +8,19 @@ import ChatWindow from "../components/ChatWindow.jsx";
 import "../App.css";
 
 function Home() {
-    // Chat se judi saari state ab yahan manage hogi
+    // --- YEH NAYI STATE ADD HUI HAI ---
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default is open
+    // ------------------------------------
+
     const [prompt, setPrompt] = useState("");
     const [reply, setReply] = useState(null);
     const [currThreadId, setCurrThreadId] = useState(uuidv4());
-    const [prevChats, setPrevChats] = useState([]); // Shuru me empty array
+    const [prevChats, setPrevChats] = useState([]);
     const [newChat, setNewChat] = useState(true);
     const [allThreads, setAllThreads] = useState([]);
 
-    // Context ke zariye in sabhi states ko neeche ke components me bheja jayega
     const providerValues = {
+        isSidebarOpen, setIsSidebarOpen, // <-- Nayi state ko context me add karein
         prompt, setPrompt,
         reply, setReply,
         currThreadId, setCurrThreadId,
@@ -25,7 +30,9 @@ function Home() {
     };
 
     return (
-        <div className="main">
+        // --- YAHAN CLASSNAME CHANGE HUA HAI ---
+        <div className={isSidebarOpen ? "main" : "main sidebar-closed"}>
+        {/* ------------------------------------ */}
             <MyContext.Provider value={providerValues}>
                 <Sidebar />
                 <ChatWindow />

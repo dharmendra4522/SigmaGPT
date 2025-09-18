@@ -19,6 +19,7 @@ button {
     background-color: transparent;
     border: solid 0.5px rgba(255, 255, 255, 0.5);
     cursor: pointer;
+    margin-top: 20px;
 }
 
 .logo {
@@ -27,10 +28,12 @@ button {
     background-color: #fff;
     border-radius: 50%;
     object-fit: cover;
+    
 }
 
 button span {
     font-size: 20px;
+    
 }
 
 button:hover {

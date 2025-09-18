@@ -6,7 +6,7 @@ import { ScaleLoader } from "react-spinners";
 import useLogout from "../hooks/useLogout.js";
 
 function ChatWindow() {
-    const { prompt, setPrompt, reply, setReply, currThreadId, setCurrThreadId, setPrevChats, newChat, setNewChat } = useContext(MyContext);
+    const {isSidebarOpen, setIsSidebarOpen, prompt, setPrompt, reply, setReply, currThreadId, setCurrThreadId, setPrevChats, newChat, setNewChat } = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const { logout } = useLogout();
@@ -65,7 +65,12 @@ function ChatWindow() {
     return (
         <div className="chatWindow">
             <div className="navbar">
-                <span>SigmaGPT <i className="fa-solid fa-chevron-down"></i></span>
+                <div className="navbar-left">
+                    <div className="menu-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                        <i className="fa-solid fa-bars"></i>
+                    </div>
+                    <span>SigmaGPT <i className="fa-solid fa-chevron-down"></i></span>
+                </div>
                 <div className="userIconDiv" onClick={handleProfileClick}>
                     <span className="userIcon"><i className="fa-solid fa-user"></i></span>
                 </div>

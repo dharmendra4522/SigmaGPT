@@ -14,3 +14,34 @@ body{
     background-color: #212121;
     display: flex;
 }
+
+/* src/App.css */
+
+/* Main container */
+.main {
+    display: flex;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Base styles for sidebar and chat window that control their size */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.chatWindow {
+    width: calc(100% - 260px);
+    transition: width 0.3s ease-in-out;
+}
+
+/* Styles when the sidebar is CLOSED */
+.main.sidebar-closed .sidebar {
+    width: 0;
+    padding: 0;
+}
+
+.main.sidebar-closed .chatWindow {
+    width: 100%;
+}
