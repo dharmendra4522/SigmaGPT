@@ -1,17 +1,16 @@
-// src/components/Sidebar.jsx
-
 import "./Sidebar.css";
 import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import { v4 as uuidv4 } from "uuid";
 
 function Sidebar() {
-    const { allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
+    const { allThreads, setAllThreads, currThreadId, setCurrThreadId, setNewChat, setPrevChats, setPrompt, setReply } = useContext(MyContext);
 
+    // Fetches all chat threads for the logged-in user
     const getAllThreads = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/chat/", {
-                credentials: 'include' // Yeh line sabse zaroori hai
+                credentials: 'include'
             });
             const res = await response.json();
             if (res.error) throw new Error(res.error);
@@ -21,9 +20,10 @@ function Sidebar() {
         }
     };
 
+    // This runs once when the component first loads
     useEffect(() => {
         getAllThreads();
-    }, []); // Yeh useEffect sirf ek baar chalna chahiye jab component load ho
+    }, []);
 
     const createNewChat = () => {
         setNewChat(true);
@@ -31,19 +31,23 @@ function Sidebar() {
         setReply(null);
         setCurrThreadId(uuidv4());
         setPrevChats([]);
+        sessionStorage.removeItem('activeThreadId'); // Clears the saved chat ID
     }
 
     const changeThread = async (newThreadId) => {
+        if (newThreadId === currThreadId && !newChat) return; // Don't reload if it's the same chat
+        
         setCurrThreadId(newThreadId);
+        setNewChat(false);
+        setReply(null);
+
         try {
             const response = await fetch(`http://localhost:8080/api/chat/${newThreadId}`, {
-                credentials: 'include' // Yeh line sabse zaroori hai
+                credentials: 'include'
             });
             const res = await response.json();
             if (res.error) throw new Error(res.error);
-            setPrevChats(res.messages);
-            setNewChat(false);
-            setReply(null);
+            setPrevChats(res.messages || []); // Ensure it's always an array
         } catch (err) {
             console.log("Error in changeThread:", err);
         }
@@ -51,13 +55,13 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/chat/${threadId}`, {
+            await fetch(`http://localhost:8080/api/chat/${threadId}`, {
                 method: "DELETE",
-                credentials: 'include' // Yeh line sabse zaroori hai
+                credentials: 'include'
             });
-            const res = await response.json();
-            if (res.error) throw new Error(res.error);
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
+            
+            // If the deleted chat was the active one, start a new chat
             if (threadId === currThreadId) {
                 createNewChat();
             }
@@ -68,32 +72,39 @@ function Sidebar() {
 
     return (
         <section className="sidebar">
-            
-            <button onClick={createNewChat}>
-                <img src="/src/assets/blacklogo.png" alt="gpt logo" className="logo" />
-                <span><i className="fa-solid fa-pen-to-square"></i></span>
-            </button>
+            <div className="sidebar-top">
+                <button className="sidebar-btn" onClick={createNewChat}>
+                    <img src="/src/assets/blacklogo.png" alt="gpt logo" className="logo" />
+                    <span className="btn-text">New Chat</span>
+                    <i className="fa-solid fa-pen-to-square"></i>
+                </button>
+            </div>
+
             <ul className="history">
-                {allThreads?.map((thread, idx) => (
-                    <li key={idx}
+                {allThreads?.map((thread) => (
+                    <li key={thread.threadId}
                         onClick={() => changeThread(thread.threadId)}
-                        className={thread.threadId === currThreadId ? "highlighted" : ""}
+                        className={thread.threadId === currThreadId ? "history-item highlighted" : "history-item"}
                     >
-                        {thread.title}
-                        <i className="fa-solid fa-trash"
+                        <span className="history-title">{thread.title}</span>
+                        <i className="fa-solid fa-trash delete-icon"
                             onClick={(e) => {
-                                e.stopPropagation();
+                                e.stopPropagation(); // Prevents li's onClick from firing
                                 deleteThread(thread.threadId);
                             }}
                         ></i>
                     </li>
                 ))}
             </ul>
-            <div className="sign">
-                <p>By Dharmendra Vishvkarma &hearts;</p>
+
+            <div className="sidebar-bottom">
+                <a className="sign" href="https://dharmendravishwakarma.netlify.app/" target="_blank" rel="noopener noreferrer">
+                    By Dharmendra Vishvkarma &hearts;
+                </a>
             </div>
         </section>
     )
 }
 
 export default Sidebar;
+

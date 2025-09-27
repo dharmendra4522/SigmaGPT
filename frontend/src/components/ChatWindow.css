@@ -1,136 +1,32 @@
 .chatWindow {
-    background-color: #212121;
-    height: 100vh;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
+    height: 100vh;
+    width: 100%;
+    background-color: #343541;
 }
-
-/* navbar */
 
 .navbar {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0.75rem 1.5rem;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
 }
 
 .navbar-left {
     display: flex;
     align-items: center;
-    /* gap: 1px;  */
+    gap: 1rem;
 }
 
-.navbar span {
-    margin: 1rem 2rem;
+.navbar-left span {
+    font-size: 1.1em;
+    font-weight: 500;
 }
-
-.userIconDiv {
-    margin: 1rem 2rem;
-}
-
-.userIcon {
-    background-color: #339cff;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-/* chat input */
-.chatInput {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.inputBox {
-    width: 100%;
-    position: relative;
-    max-width: 700px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-input {
-    width: 100%;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    font-size: 0.8rem;
-    border-radius: 14px;
-    box-shadow: rgba(0, 0, 0, 0.05) 0 54px 55px,
-                rgba(0, 0, 0, 0.05) 0 -12px 30px,
-                rgba(0, 0, 0, 0.05) 0 4px 6px,
-                rgba(0, 0, 0, 0.05) 0 12px 3px,
-                rgba(0, 0, 0, 0.05) 0 -3px 5px;
-}
-
-input:focus {
-    outline: none;
-}
-
-#submit {
-    cursor: pointer;
-    height: 35px;
-    width: 35px;
-    font-size: 20px;
-    position: absolute;
-    right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#submit i:hover {
-    color: #fff;
-}
-
-.info {
-    font-size: 0.8rem;
-    padding: 0.5rem;
-    color: #b4b4b4;
-}
-
-/* dropdown css */
-
-.dropDown {
-    position: absolute;
-    top: 4rem;
-    right: 4rem;
-    width: 150px;
-
-    background-color: #323232;
-    padding: 0.3rem 0.5rem;
-    border-radius: 6px;
-    text-align: left;
-    z-index: 1000;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.dropDownItem {
-    font-size: 0.9rem;
-    margin: 0.3rem 0rem;
-    padding: 0.5rem 0.2rem;
-    cursor: pointer;
-}
-
-
-.dropDownItem:hover {
-    background-color: rgba(180, 180, 180, 0.1);
-    border-radius: 6px;
-}
-
-/* src/components/ChatWindow.css */
 
 .menu-toggle {
     color: #fff;
@@ -142,12 +38,129 @@ input:focus {
 }
 
 .menu-toggle:hover {
-    background-color: #333;
+    background-color: #444654;
 }
 
-.navbar {
-    /* Make sure the navbar is a flex container */
+.userIconDiv {
+    position: relative;
+}
+
+.userIcon {
+    background-color: #5e5ce5;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    /* gap: 15px; */
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.chatInput {
+    width: 100%;
+    padding: 1rem 1rem 0.75rem 1rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(to top, rgba(52, 53, 65, 1), rgba(52, 53, 65, 0));
+    flex-shrink: 0;
+}
+
+.inputBox {
+    width: 100%;
+    position: relative;
+    max-width: 768px;
+}
+
+.inputBox input {
+    width: 100%;
+    border: 1px solid #555;
+    background-color: #40414f;
+    padding: 1rem 3.5rem 1rem 1.5rem;
+    font-size: 1em;
+    border-radius: 12px;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.inputBox input:disabled {
+    background-color: #30313a;
+    cursor: not-allowed;
+}
+
+.inputBox input:focus {
+    outline: none;
+    border-color: #777;
+}
+
+#submit, #stop-generating-icon {
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#submit {
+    font-size: 1em;
+    color: #8e8ea0;
+}
+
+#submit:hover {
+    color: #fff;
+}
+
+#stop-generating-icon {
+    font-size: 1.2em;
+    color: #fff;
+    background-color: #5e5ce5;
+    border-radius: 8px;
+}
+
+#stop-generating-icon:hover {
+    background-color: #4b48b8;
+}
+
+.info {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    color: #b4b4b4;
+    text-align: center;
+}
+
+.dropDown {
+    position: absolute;
+    top: 55px;
+    right: 20px;
+    width: 200px;
+    background-color: #2a2a2e;
+    padding: 0.5rem;
+    border-radius: 8px;
+    text-align: left;
+    z-index: 1000;
+    border: 1px solid #444;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dropDownItem {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.dropDownItem:hover {
+    background-color: #444654;
 }

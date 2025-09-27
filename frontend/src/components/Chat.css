@@ -1,39 +1,124 @@
+/* Main container that grows and scrolls */
+.chat-area {
+    flex: 1; /* Takes up all available vertical space */
+    width: 100%;
+    overflow-y: auto; /* Adds a scrollbar only when content is too long */
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+/* Container that holds all the messages and centers them */
 .chats {
-    max-width: 700px;
-    overflow-y: auto;
-    padding: 8rem;
-}
-
-.userDiv {
     display: flex;
-    justify-content: flex-end;
-    font-size: 0.9rem;
+    flex-direction: column;
+    gap: 1.5rem; /* Space between message bubbles */
+    max-width: 768px; /* Sets a max width for the conversation */
+    margin: 0 auto; /* Centers the conversation column on the page */
 }
 
+/* Style for the welcome message */
+.welcome-message {
+    color: #888;
+    font-weight: 300;
+    text-align: center;
+    font-size: 2em;
+}
 
-.gptDiv {
+/* Shared style for BOTH user and AI message bubbles */
+.userDiv, .gptDiv {
+    padding: 1rem;
+    border-radius: 12px;
+    max-width: 80%;
+    line-height: 1.6;
     text-align: left;
-    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+/* Styles SPECIFIC to the AI's response */
+.gptDiv {
+    background-color: #444654;
+    align-self: flex-start; /* Aligns the bubble to the LEFT */
+    color: #ececf1;
+}
+
+/* Styles SPECIFIC to the User's message */
+.userDiv {
+    background-color: #2f3a59;
+    align-self: flex-end; /* Aligns the bubble to the RIGHT */
+    color: #fff;
+}
+
+/* This targets the <p> tag for user messages, ensuring it doesn't have extra margins */
 .userMessage {
-    background-color: #323232;
-    padding: 10px 20px;
-    border-radius: 14px;
-    margin-left: 15rem;
-    max-width: 500px;
-    width: fit-content;
+    margin: 0;
 }
 
-.gptMessage {
-    background: #23272f;
-    color: #e0e0e0;
-    border-bottom-left-radius: 4px;
-}
-.hljs {
-    border-radius: 14px !important;
+/* Ensures the markdown text doesn't have extra margins */
+.gptDiv p, .gptDiv ol, .gptDiv ul {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
 }
 
-pre {
+/* --- New Styles for Code Blocks --- */
+
+.code-block {
+    background-color: #0d1117; /* Dark background for the whole block */
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    margin: 1rem 0; /* Add some space around the code block */
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #161b22;
+    padding: 0.5rem 1rem;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    color: #8b949e;
+    font-size: 0.8em;
+}
+
+.copy-btn {
+    background-color: transparent;
+    color: #8b949e;
+    border: 1px solid #30363d;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit; /* Use the same font as the rest of the app */
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.copy-btn:hover {
+    color: #c9d1d9;
+    border-color: #8b949e;
+}
+
+.copy-btn .fa-check {
+    color: #2f81f7; /* Blue color for the checkmark */
+}
+
+/* Styles for the <pre> tag inside our custom code block */
+.gptDiv .code-block pre {
+    margin: 0; /* Remove default margins from <pre> */
+    padding: 1rem;
     white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
 }
+
+/* This is a fallback for any <pre> tags that might not be inside a code block */
+.gptDiv > pre {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+}
+

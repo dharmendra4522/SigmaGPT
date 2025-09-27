@@ -10,14 +10,6 @@ body{
 }
 
 
-.main{
-    background-color: #212121;
-    display: flex;
-}
-
-/* src/App.css */
-
-/* Main container */
 .main {
     display: flex;
     transition: all 0.3s ease-in-out;

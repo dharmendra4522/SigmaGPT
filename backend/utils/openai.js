@@ -1,7 +1,7 @@
 // import "dotenv/config";
+// import fetch from 'node-fetch'; // node-fetch install hona chahiye
 
-
-// const getOpenAPIResponse = async (messages) => {
+// const getOpenAPIResponse = async (chatHistory) => {
 //     const options = {
 //         method: "POST",
 //         headers: {
@@ -10,38 +10,44 @@
 //         },
 //         body: JSON.stringify({
 //             model: "gpt-4o-mini",
-//             messages: [{
-//                 role: "user",
-//                 content: messages
-//             }],
+//             // --- YEH SABSE ZAROORI CHANGE HAI ---
+//             // Hum poori chat history (jo ek array hai) seedhe yahan bhej rahe hain
+//             messages: chatHistory,
 //         }),
 //     };
 
 //     try {
 //         const response = await fetch("https://api.openai.com/v1/chat/completions", options);
 //         const data = await response.json();
-//         // console.log(data.choices[0].message.content); //reply
+        
+//         if (data.error) {
+//             console.error("OpenAI API Error:", data.error.message);
+//             throw new Error(data.error.message);
+//         }
+
 //         if (!data.choices || data.choices.length === 0) {
 //             throw new Error("Invalid response from OpenAI API: No choices found.");
 //         }
-//         return data.choices[0].message.content; //reply
+//         return data.choices[0].message.content;
 //     } catch (error) {
-//         console.error(error);
+//         console.error("Error calling OpenAI API:", error);
 //         throw error; // Re-throw the error to be handled by the calling function
 //     }
 // }
-
 
 // export default getOpenAPIResponse;
 
 
 
 
-import "dotenv/config";
-import fetch from 'node-fetch'; // node-fetch install hona chahiye
+// backend/utils/openai.js
 
-const getOpenAPIResponse = async (chatHistory) => {
-    const options = {
+import "dotenv/config";
+import fetch from 'node-fetch';
+
+const getOpenAPIResponseStream = async (chatHistory) => {
+    // Note: We are not awaiting the full JSON response here
+    return fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -49,30 +55,10 @@ const getOpenAPIResponse = async (chatHistory) => {
         },
         body: JSON.stringify({
             model: "gpt-4o-mini",
-            // --- YEH SABSE ZAROORI CHANGE HAI ---
-            // Hum poori chat history (jo ek array hai) seedhe yahan bhej rahe hain
             messages: chatHistory,
-            // ------------------------------------
+            stream: true, // <-- This is the most important change
         }),
-    };
+    });
+};
 
-    try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", options);
-        const data = await response.json();
-        
-        if (data.error) {
-            console.error("OpenAI API Error:", data.error.message);
-            throw new Error(data.error.message);
-        }
-
-        if (!data.choices || data.choices.length === 0) {
-            throw new Error("Invalid response from OpenAI API: No choices found.");
-        }
-        return data.choices[0].message.content;
-    } catch (error) {
-        console.error("Error calling OpenAI API:", error);
-        throw error; // Re-throw the error to be handled by the calling function
-    }
-}
-
-export default getOpenAPIResponse;
+export default getOpenAPIResponseStream;

@@ -1,62 +1,97 @@
 import "./ChatWindow.css";
 import Chat from "./Chat.jsx";
 import { MyContext } from "./MyContext.jsx";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useRef } from "react";
 import { ScaleLoader } from "react-spinners";
 import useLogout from "../hooks/useLogout.js";
 
 function ChatWindow() {
-    const {isSidebarOpen, setIsSidebarOpen, prompt, setPrompt, reply, setReply, currThreadId, setCurrThreadId, setPrevChats, newChat, setNewChat } = useContext(MyContext);
+    const { isSidebarOpen, setIsSidebarOpen, prompt, setPrompt, currThreadId, setCurrThreadId, setPrevChats, newChat, setNewChat } = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const { logout } = useLogout();
+    const abortControllerRef = useRef(null);
+
+    const handleStop = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            setLoading(false);
+        }
+    };
 
     const getReply = async () => {
         if (!prompt.trim()) return;
 
-        const userMessage = prompt; // Bheje jaane wale message ko save kar lo
+        abortControllerRef.current = new AbortController();
+        const userMessage = { role: "user", content: prompt };
+        const isNewChat = newChat;
         setNewChat(false);
         setLoading(true);
-        setPrevChats(prev => [...prev, { role: "user", content: userMessage }]); // User ka message UI par turant dikhao
-        setPrompt(""); // Input field ko turant clear kar do
+        setPrevChats(prev => [...prev, userMessage, { role: "assistant", content: "" }]);
+        const currentPrompt = prompt;
+        setPrompt("");
 
-        const requestBody = {
-            message: userMessage, // Save kiya hua message bhejo
-        };
-
-        if (!newChat) {
+        const requestBody = { message: currentPrompt };
+        if (!isNewChat) {
             requestBody.threadId = currThreadId;
         }
 
-        const options = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody),
-            credentials: 'include'
-        };
-
         try {
-            const response = await fetch("http://localhost:8080/api/chat", options);
-            const res = await response.json();
-            if (res.error) throw new Error(res.error);
+            const response = await fetch("http://localhost:8080/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody),
+                credentials: 'include',
+                signal: abortControllerRef.current.signal,
+            });
 
-            setCurrThreadId(res.threadId);
-            setReply(res.response); // Yeh useEffect ko trigger karega
+            if (!response.body) return;
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n').filter(line => line.trim() !== '');
 
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.substring(6);
+                        if (data === '[DONE]') {
+                            return; 
+                        }
+                        const parsed = JSON.parse(data);
+
+                        if (parsed.threadId) {
+                            setCurrThreadId(parsed.threadId);
+                        }
+                        if (parsed.content) {
+                            setPrevChats(prev => prev.map((chat, index) => 
+                                index === prev.length - 1 
+                                ? { ...chat, content: chat.content + parsed.content } 
+                                : chat
+                            ));
+                        }
+                    }
+                }
+            }
         } catch (err) {
-            console.log("Error in getReply:", err);
-            // Yahan UI par error dikhane ka logic daal sakte hain
-            setPrevChats(prev => [...prev, { role: "assistant", content: `Error: ${err.message}` }]);
+            if (err.name === 'AbortError') {
+                console.log("Stream stopped by user.");
+                setPrevChats(prev => prev.map((chat, index) => 
+                    index === prev.length - 1 && chat.content === ""
+                    ? { ...chat, content: "[Response stopped by user]" } 
+                    : chat
+                ));
+            } else {
+                console.log("Error in getReply stream:", err);
+            }
+        } finally {
+            setLoading(false);
+            abortControllerRef.current = null;
         }
-        setLoading(false);
-    }
-
-    // Yeh useEffect ab sirf AI ka response aane par chalega
-    useEffect(() => {
-        if (reply) {
-            setPrevChats(prev => [...prev, { role: "assistant", content: reply }]);
-        }
-    }, [reply]);
+    };
 
     const handleProfileClick = () => {
         setIsOpen(!isOpen);
@@ -83,18 +118,27 @@ function ChatWindow() {
                 </div>
             }
             <Chat />
-            <div className="loader-container">
-                <ScaleLoader color="#fff" loading={loading} />
-            </div>
             <div className="chatInput">
+                {/* Purana stop button yahan se hata diya gaya hai */}
                 <div className="inputBox">
                     <input
                         placeholder="Ask anything"
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' ? getReply() : ''}
+                        onKeyDown={(e) => e.key === 'Enter' && !loading ? getReply() : ''}
+                        disabled={loading}
                     />
-                    <div id="submit" onClick={getReply}><i className="fa-solid fa-paper-plane"></i></div>
+                    {/* --- YEH LOGIC CHANGE HUA HAI --- */}
+                    {loading ? (
+                        <div id="stop-generating-icon" onClick={handleStop}>
+                            <i className="fa-solid fa-stop"></i>
+                        </div>
+                    ) : (
+                        <div id="submit" onClick={getReply}>
+                            <i className="fa-solid fa-paper-plane"></i>
+                        </div>
+                    )}
+                    {/* --------------------------------- */}
                 </div>
                 <p className="info">
                     SigmaGPT can make mistakes. Check important info.
@@ -105,3 +149,4 @@ function ChatWindow() {
 }
 
 export default ChatWindow;
+
