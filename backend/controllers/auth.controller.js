@@ -21,8 +21,9 @@ export const signup = async (req, res) => {
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: 15 * 24 * 60 * 60 * 1000,
-            sameSite: "none", // <-- Yeh change zaroori hai
-            secure: true,      // <-- Yeh bhi zaroori hai
+            sameSite: "none",
+            secure: true,
+            domain: "sigmagpt-api.onrender.com", // <-- YEH AAKHRI CHANGE HAI
         });
         res.status(201).json({ _id: newUser._id, name: newUser.name, username: newUser.username, email: newUser.email });
     } catch (error) {
@@ -47,8 +48,9 @@ export const login = async (req, res) => {
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: 15 * 24 * 60 * 60 * 1000,
-            sameSite: "none", // <-- Yeh change zaroori hai
-            secure: true,      // <-- Yeh bhi zaroori hai
+            sameSite: "none",
+            secure: true,
+            domain: "sigmagpt-api.onrender.com", // <-- YEH AAKHRI CHANGE HAI
         });
         res.status(200).json({ _id: user._id, name: user.name, username: user.username, email: user.email });
     } catch (error) {
