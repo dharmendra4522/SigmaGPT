@@ -16,18 +16,18 @@ const PORT = process.env.PORT || 8080;
 // --- CORS Configuration ---
 const allowedOrigins = [
     'http://localhost:5173', // For local development
-    'https://sigma-gpt-three.vercel.app' // Your live frontend URL
+    'https://sigma-gpt-three.vercel.app', // Your main Vercel URL
+    'https://sigma-cd1vr1694-dharmendra4522s-projects.vercel.app' // The specific deployment URL from the error
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
+        // Allow requests with no origin (like Postman) or from our allowed list
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
         }
-        return callback(null, true);
     },
     credentials: true,
 }));
@@ -44,7 +44,6 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected with database!");
   } catch (err) {
-    // We don't log the full error here in production for security
     console.log("Failed to connect with DB");
   }
 };
