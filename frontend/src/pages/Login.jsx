@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import './AuthForm.css'; // <-- CSS file import karein
+import './AuthForm.css';
 
 const Login = () => {
     const [inputs, setInputs] = useState({ username: '', password: '' });
@@ -16,7 +16,9 @@ const Login = () => {
         setLoading(true);
         setError(null);
         try {
+            // --- YEH URL SABSE ZAROORI HAI ---
             const res = await fetch("https://sigmagpt-api.onrender.com/api/auth/login", {
+            // ------------------------------------
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(inputs),
