@@ -4,12 +4,12 @@ import { MyContext } from "./MyContext.jsx";
 import { v4 as uuidv4 } from "uuid";
 
 function Sidebar() {
-    const { allThreads, setAllThreads, currThreadId, setCurrThreadId, setNewChat, setPrevChats, setPrompt, setReply } = useContext(MyContext);
+    const { allThreads, setAllThreads, currThreadId, setCurrThreadId, setNewChat, setPrevChats, setPrompt, setReply, newChat } = useContext(MyContext);
 
     // Fetches all chat threads for the logged-in user
     const getAllThreads = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/chat/", {
+            const response = await fetch("https://sigmagpt-api.onrender.com/api/chat/", {
                 credentials: 'include'
             });
             const res = await response.json();
@@ -20,10 +20,11 @@ function Sidebar() {
         }
     };
 
-    // This runs once when the component first loads
+    // This effect runs when the component first loads and also after a new chat is created
+    // to ensure the sidebar list stays up-to-date.
     useEffect(() => {
         getAllThreads();
-    }, []);
+    }, [currThreadId]);
 
     const createNewChat = () => {
         setNewChat(true);
@@ -42,7 +43,7 @@ function Sidebar() {
         setReply(null);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/chat/${newThreadId}`, {
+            const response = await fetch(`https://sigmagpt-api.onrender.com/api/chat/${newThreadId}`, {
                 credentials: 'include'
             });
             const res = await response.json();
@@ -55,13 +56,12 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            await fetch(`http://localhost:8080/api/chat/${threadId}`, {
+            await fetch(`https://sigmagpt-api.onrender.com/api/chat/${threadId}`, {
                 method: "DELETE",
                 credentials: 'include'
             });
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
             
-            // If the deleted chat was the active one, start a new chat
             if (threadId === currThreadId) {
                 createNewChat();
             }

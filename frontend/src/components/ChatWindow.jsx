@@ -2,7 +2,6 @@ import "./ChatWindow.css";
 import Chat from "./Chat.jsx";
 import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useRef } from "react";
-import { ScaleLoader } from "react-spinners";
 import useLogout from "../hooks/useLogout.js";
 
 function ChatWindow() {
@@ -37,7 +36,7 @@ function ChatWindow() {
         }
 
         try {
-            const response = await fetch("http://localhost:8080/api/chat", {
+            const response = await fetch("https://sigmagpt-api.onrender.com/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestBody),
@@ -86,6 +85,11 @@ function ChatWindow() {
                 ));
             } else {
                 console.log("Error in getReply stream:", err);
+                setPrevChats(prev => {
+                    const newChats = [...prev];
+                    newChats[newChats.length - 1].content = `Error: ${err.message}`;
+                    return newChats;
+                });
             }
         } finally {
             setLoading(false);
@@ -119,7 +123,6 @@ function ChatWindow() {
             }
             <Chat />
             <div className="chatInput">
-                {/* Purana stop button yahan se hata diya gaya hai */}
                 <div className="inputBox">
                     <input
                         placeholder="Ask anything"
@@ -128,7 +131,6 @@ function ChatWindow() {
                         onKeyDown={(e) => e.key === 'Enter' && !loading ? getReply() : ''}
                         disabled={loading}
                     />
-                    {/* --- YEH LOGIC CHANGE HUA HAI --- */}
                     {loading ? (
                         <div id="stop-generating-icon" onClick={handleStop}>
                             <i className="fa-solid fa-stop"></i>
@@ -138,7 +140,6 @@ function ChatWindow() {
                             <i className="fa-solid fa-paper-plane"></i>
                         </div>
                     )}
-                    {/* --------------------------------- */}
                 </div>
                 <p className="info">
                     SigmaGPT can make mistakes. Check important info.

@@ -23,7 +23,7 @@
     padding: 12px;
     border-radius: 8px;
     background-color: transparent;
-    border: none;
+    border: 1px solid #555;
     color: #ececf1;
     cursor: pointer;
     font-size: 0.9em;
@@ -105,7 +105,7 @@
 
 /* Bottom signature section */
 .sidebar-bottom {
-    flex-shrink: 0; /* Prevents this section from shrinking */
+    flex-shrink: 0;
     padding-top: 0.75rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -124,3 +124,4 @@
 .sign:hover {
     background-color: #2f2f37;
 }
+

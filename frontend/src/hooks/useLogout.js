@@ -5,7 +5,7 @@ const useLogout = () => {
 
     const logout = async () => {
         try {
-            const res = await fetch("http://localhost:8080/api/auth/logout", {
+            const res = await fetch("https://sigmagpt-api.onrender.com/api/auth/logout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: 'include'
@@ -14,12 +14,12 @@ const useLogout = () => {
             if (data.error) {
                 throw new Error(data.error);
             }
-
+        } catch (error) {
+            console.error("Logout Error:", error.message);
+        } finally {
+            // Hamesha logout karo, chahe API call fail ho ya pass
             localStorage.removeItem("chat-user");
             setAuthUser(null);
-        } catch (error) {
-            alert(error.message);
-            console.error(error);
         }
     };
 
