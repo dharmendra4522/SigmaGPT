@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 // app.use(cors());
 app.use(cors({
-    origin: [
+  origin: [
         'http://localhost:5173', // Local development ke liye
         'https://sigma-gpt-three.vercel.app' // Aapka naya live frontend URL
     ],
