@@ -16,7 +16,8 @@ const Login = () => {
         setLoading(true);
         setError(null);
         try {
-            // --- YEH URL SABSE ZAROORI HAI ---
+            // --- THIS IS THE CRUCIAL FIX ---
+            // Ensure the fetch call points to your live Render backend
             const res = await fetch("https://sigmagpt-api.onrender.com/api/auth/login", {
             // ------------------------------------
                 method: "POST",
