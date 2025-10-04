@@ -13,25 +13,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// --- CORS Configuration ---
-const allowedOrigins = [
-    'http://localhost:5173', // For local development
-    'https://sigma-gpt-three.vercel.app', // Your main Vercel URL
-    'https://sigma-cd1vr1694-dharmendra4522s-projects.vercel.app' // The specific deployment URL from the error
-];
-
-app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like Postman) or from our allowed list
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-}));
-// -------------------------
+// Proxy ke saath, simple CORS kaafi hai.
+app.use(cors());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -52,3 +35,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
+
