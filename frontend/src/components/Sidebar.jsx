@@ -9,9 +9,7 @@ function Sidebar() {
     // Fetches all chat threads for the logged-in user
     const getAllThreads = async () => {
         try {
-            const response = await fetch("https://sigmagpt-api.onrender.com/api/chat/", {
-                credentials: 'include'
-            });
+            const response = await fetch("/api/chat/");
             const res = await response.json();
             if (res.error) throw new Error(res.error);
             setAllThreads(res);
@@ -23,7 +21,10 @@ function Sidebar() {
     // This effect runs when the component first loads and also after a new chat is created
     // to ensure the sidebar list stays up-to-date.
     useEffect(() => {
-        getAllThreads();
+        // Only fetch threads if there's an active user session (indicated by currThreadId)
+        if (currThreadId) {
+            getAllThreads();
+        }
     }, [currThreadId]);
 
     const createNewChat = () => {
@@ -43,9 +44,7 @@ function Sidebar() {
         setReply(null);
 
         try {
-            const response = await fetch(`https://sigmagpt-api.onrender.com/api/chat/${newThreadId}`, {
-                credentials: 'include'
-            });
+            const response = await fetch(`/api/chat/${newThreadId}`);
             const res = await response.json();
             if (res.error) throw new Error(res.error);
             setPrevChats(res.messages || []); // Ensure it's always an array
@@ -56,12 +55,12 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            await fetch(`https://sigmagpt-api.onrender.com/api/chat/${threadId}`, {
+            await fetch(`/api/chat/${threadId}`, {
                 method: "DELETE",
-                credentials: 'include'
             });
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
             
+            // If the deleted chat was the active one, start a new chat
             if (threadId === currThreadId) {
                 createNewChat();
             }

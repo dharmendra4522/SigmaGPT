@@ -36,11 +36,10 @@ function ChatWindow() {
         }
 
         try {
-            const response = await fetch("https://sigmagpt-api.onrender.com/api/chat", {
+            const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestBody),
-                credentials: 'include',
                 signal: abortControllerRef.current.signal,
             });
 

@@ -7,7 +7,6 @@ const Login = () => {
     const [inputs, setInputs] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
     const { setAuthUser } = useAuthContext();
     const navigate = useNavigate();
 
@@ -16,14 +15,10 @@ const Login = () => {
         setLoading(true);
         setError(null);
         try {
-            // --- THIS IS THE CRUCIAL FIX ---
-            // Ensure the fetch call points to your live Render backend
-            const res = await fetch("https://sigmagpt-api.onrender.com/api/auth/login", {
-            // ------------------------------------
+            const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(inputs),
-                credentials: 'include'
             });
             const data = await res.json();
             if (data.error) throw new Error(data.error);
@@ -67,3 +62,4 @@ const Login = () => {
 };
 
 export default Login;
+
