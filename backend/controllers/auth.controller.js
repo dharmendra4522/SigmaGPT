@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
         await newUser.save();
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '15d' });
         
-        // Cookie ko wapas 'strict' par set karein
+        // --- YEH LINE THEEK KI GAYI HAI ---
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: 15 * 24 * 60 * 60 * 1000,
@@ -45,7 +45,7 @@ export const login = async (req, res) => {
         }
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '15d' });
         
-        // Cookie ko wapas 'strict' par set karein
+        // --- YEH LINE BHI THEEK KI GAYI HAI ---
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: 15 * 24 * 60 * 60 * 1000,
