@@ -21,8 +21,7 @@ function Sidebar() {
     // This effect runs when the component first loads and also after a new chat is created
     // to ensure the sidebar list stays up-to-date.
     useEffect(() => {
-        // Only fetch threads if there's an active user session (indicated by currThreadId)
-        if (currThreadId) {
+        if (currThreadId) { 
             getAllThreads();
         }
     }, [currThreadId]);
@@ -33,11 +32,11 @@ function Sidebar() {
         setReply(null);
         setCurrThreadId(uuidv4());
         setPrevChats([]);
-        sessionStorage.removeItem('activeThreadId'); // Clears the saved chat ID
+        sessionStorage.removeItem('activeThreadId');
     }
 
     const changeThread = async (newThreadId) => {
-        if (newThreadId === currThreadId && !newChat) return; // Don't reload if it's the same chat
+        if (newThreadId === currThreadId && !newChat) return;
         
         setCurrThreadId(newThreadId);
         setNewChat(false);
@@ -47,7 +46,7 @@ function Sidebar() {
             const response = await fetch(`/api/chat/${newThreadId}`);
             const res = await response.json();
             if (res.error) throw new Error(res.error);
-            setPrevChats(res.messages || []); // Ensure it's always an array
+            setPrevChats(res.messages || []);
         } catch (err) {
             console.log("Error in changeThread:", err);
         }
@@ -60,7 +59,6 @@ function Sidebar() {
             });
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
             
-            // If the deleted chat was the active one, start a new chat
             if (threadId === currThreadId) {
                 createNewChat();
             }
