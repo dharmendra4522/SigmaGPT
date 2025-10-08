@@ -13,8 +13,24 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Proxy ke saath, simple CORS kaafi hai.
-app.use(cors());
+// --- YEH HISSA UPDATE HUA HAI ---
+const allowedOrigins = [
+    'http://localhost:5173', // Local testing ke liye
+    'https://sigma-gpt-5s3g.onrender.com' // Aapka live frontend URL
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Bina origin wali requests (jaise Postman) aur allowed list wali requests ko allow karo
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+}));
+// ---------------------------------
 
 app.use(express.json());
 app.use(cookieParser());
@@ -35,4 +51,3 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
-
