@@ -18,11 +18,12 @@ export const signup = async (req, res) => {
         await newUser.save();
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '15d' });
         
-        // --- YEH LINE THEEK KI GAYI HAI ---
+        // Correct cookie settings for cross-domain deployment
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: 15 * 24 * 60 * 60 * 1000,
-            sameSite: "strict",
+            sameSite: "none", // Allows cookie to be sent from a different domain
+            secure: true,      // Must be true when sameSite is "none"
         });
         
         res.status(201).json({ _id: newUser._id, name: newUser.name, username: newUser.username, email: newUser.email });
@@ -45,11 +46,12 @@ export const login = async (req, res) => {
         }
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '15d' });
         
-        // --- YEH LINE BHI THEEK KI GAYI HAI ---
+        // Correct cookie settings for cross-domain deployment
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: 15 * 24 * 60 * 60 * 1000,
-            sameSite: "strict",
+            sameSite: "none", // Allows cookie to be sent from a different domain
+            secure: true,      // Must be true when sameSite is "none"
         });
 
         res.status(200).json({ _id: user._id, name: user.name, username: user.username, email: user.email });
@@ -61,7 +63,13 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
     try {
-        res.cookie("jwt", "", { maxAge: 0 });
+        // Clear the cookie with the same cross-domain settings
+        res.cookie("jwt", "", { 
+            httpOnly: true,
+            expires: new Date(0),
+            sameSite: "none",
+            secure: true,
+        });
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error)
     {
@@ -69,3 +77,4 @@ export const logout = (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+

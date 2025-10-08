@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// --- YEH HISSA UPDATE HUA HAI ---
+// --- YEH HISSA SABSE ZAROORI HAI ---
 const allowedOrigins = [
     'http://localhost:5173', // Local testing ke liye
     'https://sigma-gpt-5s3g.onrender.com' // Aapka live frontend URL
@@ -21,14 +21,13 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Bina origin wali requests (jaise Postman) aur allowed list wali requests ko allow karo
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true,
+    credentials: true, // Cookies ke liye yeh zaroori hai
 }));
 // ---------------------------------
 
@@ -51,3 +50,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
+
