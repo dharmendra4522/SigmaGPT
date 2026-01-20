@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8080;
 // --- YEH HISSA SABSE ZAROORI HAI ---
 const allowedOrigins = [
     'http://localhost:5173', // Local testing ke liye
-    'https://sigma-gpt-5s3g.onrender.com' // Aapka live frontend URL
+    'https://sigma-gpt-three.vercel.app/' // Aapka live frontend URL
 ];
 
 app.use(cors({

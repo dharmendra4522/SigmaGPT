@@ -42,7 +42,7 @@ const Signup = () => {
                 <input type='text' placeholder='Full Name' className="auth-input" onChange={(e) => setInputs({ ...inputs, name: e.target.value })}/>
                 <input type='text' placeholder='Username' className="auth-input" onChange={(e) => setInputs({ ...inputs, username: e.target.value })}/>
                 <input type='email' placeholder='Email' className="auth-input" onChange={(e) => setInputs({ ...inputs, email: e.target.value })}/>
-                <input type='password' placeholder='Password' className="auth-input" onChange={(e) => setInputs({ ...inputs, password: e.target.value })}/>
+                <input type='password' placeholder='Password' className="auth-input" autoComplete="new-password" onChange={(e) => setInputs({ ...inputs, password: e.target.value })}/>
                 <button type='submit' className="auth-button" disabled={loading}>
                     {loading ? "Signing Up..." : "Sign Up"}
                 </button>

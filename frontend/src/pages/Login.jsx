@@ -49,6 +49,7 @@ const Login = () => {
                     type='password'
                     placeholder='Password'
                     className="auth-input"
+                    autoComplete="current-password"
                     onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                 />
                 <button type='submit' className="auth-button" disabled={loading}>
